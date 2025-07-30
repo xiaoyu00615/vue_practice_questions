@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  <h1>UseTopic</h1>
+  <h1 class="bg-green-200">UseTopic</h1>
 </template>
 
 <style scoped>
-
 </style>

@@ -1,0 +1,28 @@
+@import "tailwindcss";
+/* 自定义基础样式 */
+@layer base {
+    /* 保留标题默认样式 */
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: revert;
+        margin: revert;
+    }
+
+    /* 保留列表默认样式 */
+    ul, ol {
+        list-style: revert;
+        padding: revert;
+        margin: revert;
+    }
+
+    /* 保留按钮默认样式 */
+    button {
+        background-color: revert;
+        border: revert;
+        padding: revert;
+        cursor: revert;
+    }
+    div{
+        max-width: revert;
+    }
+}
+
