@@ -20,3 +20,19 @@ export function splitFormat(str){
     const strArr = str.toString().split('.')
     return strArr[strArr.length - 1]
 }
+
+/**
+ * 生成一个验证码
+ * @param str 所需的验证字符
+ * @param length 验证码长度
+ * @returns {string} 验证码
+ */
+export function randomCode(str = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz',length = 6){
+    let code = ''
+
+    for (let i = 0; i < length; i++){
+        code += str[Math.floor(Math.random()*str.length)]
+    }
+
+    return code
+}

@@ -1,0 +1,279 @@
+<script setup>
+  import {switchPage} from "@/public/public.js";
+  import {useRouter} from "vue-router";
+
+  import { ref } from 'vue'
+  import { randomCode } from "@/public/utils.js";
+  import {onMounted} from "vue";
+
+  const code = ref('kHi4D7')
+
+  onMounted(()=>{
+    code.value = randomCode()
+  })
+
+  const router = useRouter()
+</script>
+
+
+<template>
+  <div class="form-container">
+    <p class="title">Register</p>
+    <form class="form">
+
+      <div class="wave-group">
+        <input required type="text" class="input">
+        <span class="bar"></span>
+        <label class="label">
+          <span class="label-char" style="--index: 0">用</span>
+          <span class="label-char" style="--index: 1">户</span>
+          <span class="label-char" style="--index: 2">名</span>
+          <span class="label-char" style="--index: 3">：</span>
+        </label>
+      </div>
+
+      <div class="wave-group">
+        <input required type="text" class="input">
+        <span class="bar"></span>
+        <label class="label">
+          <span class="label-char" style="--index: 0">E</span>
+          <span class="label-char" style="--index: 1">-</span>
+          <span class="label-char" style="--index: 2">mail</span>
+          <span class="label-char" style="--index: 3">：</span>
+        </label>
+      </div>
+
+      <div class="wave-group">
+        <input required type="text" class="input">
+        <span class="bar"></span>
+        <label class="label">
+          <span class="label-char" style="--index: 0">密</span>
+          <span class="label-char" style="--index: 1">码</span>
+          <span class="label-char" style="--index: 2">：</span>
+        </label>
+      </div>
+
+      <div class="wave-group">
+        <input required type="text" class="input">
+        <span class="bar"></span>
+        <label class="label">
+          <span class="label-char" style="--index: 0">相</span>
+          <span class="label-char" style="--index: 1">同</span>
+          <span class="label-char" style="--index: 2">密</span>
+          <span class="label-char" style="--index: 3">码</span>
+          <span class="label-char" style="--index: 4">：</span>
+        </label>
+      </div>
+
+      <div class="wave-group flex">
+        <div class="int-content">
+          <input required type="text" class="input">
+          <span class="bar"></span>
+          <label class="label">
+            <span class="label-char" style="--index: 0">验</span>
+            <span class="label-char" style="--index: 1">证</span>
+            <span class="label-char" style="--index: 2">码</span>
+            <span class="label-char" style="--index: 3">：</span>
+          </label>
+        </div>
+        <div class="code">
+          {{ code }}
+        </div>
+      </div>
+    </form>
+    <button class="sign" @click="switchPage(router,'login')">注册</button>
+  </div>
+</template>
+
+<style scoped>
+.form-container {
+  width: 450px;
+  border-radius: 0.75rem;
+  background-color: rgba(17, 24, 39, 1);
+  padding: 2rem;
+  color: rgba(243, 244, 246, 1);
+  position: absolute;
+  transform: translate(-50%,-50%);
+  top:50%;
+  left: 50%;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+.form {
+  margin-top: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  color: rgba(156, 163, 175, 1);
+  margin-bottom: 4px;
+}
+
+.input-group input {
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(55, 65, 81, 1);
+  outline: 0;
+  background-color: rgba(17, 24, 39, 1);
+  padding: 0.75rem 1rem;
+  color: rgba(243, 244, 246, 1);
+}
+
+.input-group input:focus {
+  border-color: rgba(167, 139, 250);
+}
+
+
+
+.forgot_password a,.forgot_password a {
+  color: rgba(243, 244, 246, 1);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot_password a:hover, .forgot_password a:hover {
+  text-decoration: underline rgba(167, 139, 250, 1);
+}
+
+.sign {
+  display: block;
+  width: 100%;
+  background-color: rgba(167, 139, 250, 1);
+  padding: 0.75rem;
+  text-align: center;
+  color: rgba(17, 24, 39, 1);
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+.social-icons .icon svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  fill: #fff;
+}
+
+
+
+
+.wave-group {
+  position: relative;
+  height: 80px;
+
+}
+
+.wave-group .input {
+  font-size: 16px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #515151;
+  background: transparent;
+}
+
+.wave-group .input:focus {
+  outline: none;
+}
+
+.wave-group .label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  display: flex;
+}
+
+.wave-group .label-char {
+  transition: 0.2s ease all;
+  transition-delay: calc(var(--index) * .05s);
+}
+
+.wave-group .input:focus ~ label .label-char,
+.wave-group .input:valid ~ label .label-char {
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #5264AE;
+}
+
+.wave-group .bar {
+  position: relative;
+  display: block;
+}
+
+.wave-group .bar:before,.wave-group .bar:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #5264AE;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.wave-group .bar:before {
+  left: 50%;
+}
+
+.wave-group .bar:after {
+  right: 50%;
+}
+
+.wave-group .input:focus ~ .bar:before,
+.wave-group .input:focus ~ .bar:after {
+  width: 50%;
+}
+
+
+.wave-group .int-content{
+  width: 70%;
+  padding-right: 10%;
+}
+
+.wave-group .code{
+  width: 30%;
+  height: 40px;
+  border:2px dashed #999;
+  text-align: center;
+  line-height: 40px;
+  letter-spacing: 4px;
+}
+
+
+
+.social-icons button{
+  cursor: pointer;
+}
+
+
+.social-icons .icon svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  fill: #fff;
+}
+
+
+.flex{
+  display: flex;
+  justify-content: space-between;
+}
+
+</style>
+
+
+
+
+

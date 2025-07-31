@@ -1,4 +1,6 @@
 <style scoped>
+  @import "@/assets/public.css";
+
   .form-container {
     width: 450px;
     border-radius: 0.75rem;
@@ -275,7 +277,7 @@
     <button class="sign" @click="switchPage(router,'')">登录</button>
     <div class="social-message">
       <div class="line"></div>
-      <p class="message">还没有账号？ <a href="#">去注册</a> </p>
+      <p class="message">还没有账号？ <span class="switch_style" @click="switchPage(router,'register')">去注册</span> </p>
       <div class="line"></div>
     </div>
 

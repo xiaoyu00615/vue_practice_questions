@@ -33,7 +33,7 @@
         ></path>
       </svg>
       <p class="cursor-text font-semiboldb pl-2 text-base">
-        成功 - <slot name="mes_success">执行完毕，已响应</slot>
+        成功 - <slot name="success">执行完毕，已响应</slot>
       </p>
     </div>
 
@@ -57,7 +57,7 @@
         ></path>
       </svg>
       <p class="cursor-text font-semiboldb pl-2 text-base">
-        信息 - <slot name="mes_info">有新的信息，注意查收！</slot>
+        信息 - <slot name="info">有新的信息，注意查收！</slot>
       </p>
     </div>
 
@@ -81,7 +81,7 @@
         ></path>
       </svg>
       <p class="cursor-text font-semiboldb pl-2 text-base">
-        警告 - <slot name="mes_warning">这样做可能会产生一些不可控影响！</slot>
+        警告 - <slot name="warning">这样做可能会产生一些不可控影响！</slot>
       </p>
     </div>
 
@@ -104,7 +104,7 @@
         ></path>
       </svg>
       <p class="cursor-text font-semiboldb pl-2 text-base">
-        错误 - <slot name="mes_error">产生错误，错误信息！</slot>
+        错误 - <slot name="error">产生错误，错误信息！</slot>
       </p>
     </div>
   </div>

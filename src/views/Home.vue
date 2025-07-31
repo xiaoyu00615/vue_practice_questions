@@ -1,5 +1,5 @@
 <script setup>
-  import {reactive,ref} from "vue";
+import {reactive, ref, watch} from "vue";
 
   import {switchPage} from '@/public/public.js'
   import {countSize , splitFormat} from '@/public/utils'
@@ -17,10 +17,16 @@
 
   const WordText = ref(null)
 
+  const promptMessage = reactive({
+    type:'',
+    message:''
+  })
+
   function readerWord(e){
     const file = e.target.files[0]
 
     if (!file) return;
+
     // 保持响应式
     Object.assign(fileData,{
       fileName : file.name,
@@ -28,8 +34,15 @@
       fileFormat :splitFormat(file.name)
     })
 
-    if (!file.name.endsWith('.docx')) return
+    if (!file.name.endsWith('.docx')){
+      promptMessage.type = 'error'
+      promptMessage.message = '文件选择不正确'
+      return;
+    }
     console.log(file)
+
+    promptMessage.type = 'success'
+    promptMessage.message = '文件通过检查'
 
 
     Promise.all([
@@ -41,6 +54,14 @@
       console.log(err)
     })
   }
+
+  watch(promptMessage,(newValue,oldValue)=>{
+    console.log(newValue,oldValue)
+    setTimeout(()=>{
+      promptMessage.type = ''
+    },3000)
+  })
+
 
 </script>
 
@@ -86,10 +107,10 @@
     </div>
   </div>
 
-  <div class="prompt">
-<!--    <PromptFrame>-->
-<!--&lt;!&ndash;      <template #mes_success>正确可以被识别</template>&ndash;&gt;-->
-<!--    </PromptFrame>-->
+  <div class="prompt" v-if="promptMessage.type">
+    <PromptFrame :messageType="promptMessage.type">
+      <template v-slot:[promptMessage.type]>{{ promptMessage.message }}</template>
+    </PromptFrame>
   </div>
 
 
@@ -215,7 +236,7 @@
     width: 400px;
     position:absolute;
     transform: translate(-50%,-50%);
-    top:50%;
+    top:10%;
     left: 50%;
   }
 </style>
