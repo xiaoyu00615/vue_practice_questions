@@ -1,20 +1,33 @@
-.switch_style{
+.switch_style {
     border-bottom: 2px solid #828181;
     color: #828181;
     cursor: pointer;
 }
+
 .switch_style:hover {
     border-bottom: 2px solid #e3e1e1;
     color: #e3e1e1;
 }
-.switch_style:active{
+
+.switch_style:active {
     border-bottom: 2px solid #a6a4a4;
     color: #a6a4a4;
 }
 
 
 /* 布局 */
-.flex{
+.flex {
     display: flex;
     justify-content: space-between;
+}
+
+
+
+.prompt{
+    height: 92px;
+    width: 400px;
+    position:absolute;
+    transform: translate(-50%,-50%);
+    top:10%;
+    left: 50%;
 }
