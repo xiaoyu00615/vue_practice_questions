@@ -1,8 +1,8 @@
 <script setup>
-import {reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 
   import {switchPage} from '@/public/public.js'
-  import {countSize , splitFormat} from '@/public/utils'
+import {countSize, readingArrData, splitFormat} from '@/public/utils'
   import {extractTextFromWord} from '@/public/wordHandler.js'
   import AnswerQuestionsCard from "@/components/AnswerQuestionsCard.vue";
   import PromptFrame from '@/components/PromptFrame.vue'
@@ -21,6 +21,8 @@ import {reactive, ref, watch} from "vue";
     type:'',
     message:''
   })
+
+  const loginMessage = ref('Login - 登录')
 
   function readerWord(e){
     const file = e.target.files[0]
@@ -63,6 +65,17 @@ import {reactive, ref, watch} from "vue";
   })
 
 
+  onMounted(()=>{
+
+    const localMes = readingArrData('loginUser')
+    if (!localMes) return
+
+    loginMessage.value = `你好： ${localMes.userName}`
+
+    promptMessage.type = 'success'
+    promptMessage.message = `登录成功，你好 ${ localMes.userName }`
+  })
+
 </script>
 
 <template>
@@ -87,7 +100,7 @@ import {reactive, ref, watch} from "vue";
     <div class="right">
       <div class="column">
         <button @click="switchPage(router,'login')">
-          <span>Login - 登录</span>
+          <span>{{ loginMessage }}</span>
         </button>
       </div>
       <div class="content">

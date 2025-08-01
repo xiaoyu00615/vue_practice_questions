@@ -4,14 +4,12 @@
 
   import {reactive, ref, watch} from 'vue'
   import PromptFrame from "@/components/PromptFrame.vue";
-  import { randomCode } from "@/public/utils.js";
+  import {randomCode, readingArrData, saveArrData} from "@/public/utils.js";
   import {onMounted} from "vue";
 
   const code = ref('kHi4D7')
 
-  onMounted(()=>{
-    code.value = randomCode()
-  })
+
 
   const intValue = reactive({
     userName:'',
@@ -25,6 +23,20 @@
     message:'',
   })
   const router = useRouter()
+
+  let allUser = reactive([])
+
+  onMounted(()=>{
+    code.value = randomCode()
+
+    if (!readingArrData('allUser')){
+      allUser = []
+      return
+    }
+
+    allUser = readingArrData('allUser')
+
+  })
 
   // 创建新的验证码
   function crateCode(hasShow = true){
@@ -48,10 +60,6 @@
       promptMessage.hasShow = true
       promptMessage.type = ''
     },3000)
-
-
-
-
   })
 
   function registerUser(){
@@ -82,7 +90,20 @@
       return;
     }
 
-    console.log("输入合法")
+    // console.log("输入合法")
+    allUser.push(intValue)
+    saveArrData('allUser',allUser)
+    promptMessage.type = 'success'
+    promptMessage.message = '账号注册成功！'
+
+    // 清空输入框
+    Object.assign(intValue,{
+      userName:'',
+      email:'',
+      password:'',
+      repeatPassword:'',
+      codeId:''
+    })
 
   }
 
@@ -108,7 +129,7 @@
       </div>
 
       <div class="wave-group">
-        <input type="text" class="input" v-model="intValue.email">
+        <input required type="text" class="input" v-model="intValue.email">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">E</span>
@@ -119,7 +140,7 @@
       </div>
 
       <div class="wave-group">
-        <input required type="text" class="input" v-model="intValue.password">
+        <input required type="password" class="input" v-model="intValue.password">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">密</span>
@@ -129,7 +150,7 @@
       </div>
 
       <div class="wave-group">
-        <input required type="text" class="input" v-model="intValue.repeatPassword">
+        <input required type="password" class="input" v-model="intValue.repeatPassword">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">相</span>

@@ -231,6 +231,10 @@
     color: rgba(156, 163, 175, 1);
     margin-top: 0.5rem;
   }
+
+  .mar{
+    margin-top: 20px;
+  }
 </style>
 
 <template>
@@ -239,7 +243,7 @@
     <form class="form">
 
       <div class="wave-group">
-        <input required type="text" class="input">
+        <input required type="text" class="input" v-model="intValue.userName">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">用</span>
@@ -250,7 +254,7 @@
       </div>
 
       <div class="wave-group">
-        <input required type="text" class="input">
+        <input required type="text" class="input" v-model="intValue.email">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">E</span>
@@ -261,7 +265,7 @@
       </div>
 
       <div class="wave-group">
-        <input required type="text" class="input">
+        <input required type="text" class="input" v-model="intValue.password">
         <span class="bar"></span>
         <label class="label">
           <span class="label-char" style="--index: 0">密</span>
@@ -274,7 +278,8 @@
         <a rel="noopener noreferrer" href="#">忘记密码 ?</a>
       </p>
     </form>
-    <button class="sign" @click="switchPage(router,'')">登录</button>
+    <button class="sign" @click="login">登录</button>
+    <button class="sign mar" @click="visitorLogin">访客登录</button>
     <div class="social-message">
       <div class="line"></div>
       <p class="message">还没有账号？ <span class="switch_style" @click="switchPage(router,'register')">去注册</span> </p>
@@ -302,12 +307,99 @@
       <a rel="noopener noreferrer" href="#" class=""> 新选择</a>
     </p>
   </div>
+
+
+  <div class="prompt" v-if="promptMessage.type">
+    <PromptFrame :messageType="promptMessage.type">
+      <template v-slot:[promptMessage.type]>{{ promptMessage.message }}</template>
+    </PromptFrame>
+  </div>
 </template>
 <script setup>
   import {switchPage} from "@/public/public.js";
   import {useRouter} from "vue-router";
+  import {reactive, ref, watch} from "vue";
+  import PromptFrame from "@/components/PromptFrame.vue";
+  import {readingArrData, saveArrData} from "@/public/utils.js";
 
   const router = useRouter()
+
+  const promptMessage = reactive({
+    type :'',
+    message:'',
+  })
+
+  const intValue = reactive({
+    userName: '',
+    email:'',
+    password:'',
+  })
+
+  const allUser = ref(null)
+  allUser.value = readingArrData('allUser')
+  console.log(allUser.value)
+
+  function login(){
+    console.log(allUser.value.length)
+    if (!intValue.userName && !intValue.password){
+      promptMessage.type = 'warning'
+      promptMessage.message = '没有检测到输入信息！'
+      return;
+    }
+
+
+    if (!allUser.value.length){
+      promptMessage.type = 'error'
+      promptMessage.message = '没有账号信息请先注册'
+
+      return
+    }
+
+    const userObj = ref(null)
+
+
+    if(allUser.value > 1) {
+      userObj.value = allUser.value.find((user) => {
+        return user.userName === intValue.userName && user.password === intValue.password
+      })
+    }else{
+      (allUser.value[0].userName , intValue.userName , allUser.value[0].password , intValue.password) ? userObj.value = allUser.value[0] :userObj.value = "null"
+    }
+    if (userObj.value){
+      promptMessage.type = 'success'
+      promptMessage.message = '登录成功等待跳转！'
+    }else {
+      promptMessage.type = 'error'
+      promptMessage.message = '登录失败，账号或密码错误！'
+      return;
+    }
+
+    saveArrData('loginUser',userObj.value)
+
+    setTimeout(()=>{
+        switchPage(router, '')
+    },800)
+
+  }
+
+  function visitorLogin(){
+    saveArrData('loginUser', null)
+
+    promptMessage.type = 'success'
+    promptMessage.message = '访客登录成功等待跳转！'
+
+    setTimeout(()=>{
+      switchPage(router, '')
+    },800)
+  }
+
+
+  watch(promptMessage,()=>{
+    setTimeout(()=>{
+      promptMessage.hasShow = true
+      promptMessage.type = ''
+    },3000)
+  })
 </script>
 
 
