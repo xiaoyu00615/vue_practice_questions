@@ -9,6 +9,7 @@
   import {useRouter} from "vue-router";
   import Button from "@/components/Button.vue";
   import LookFileAnimate from "@/components/LookFileAnimate.vue";
+  import ButtonCode from "@/components/ButtonCode.vue";
 
   const router = useRouter()
   const fileData = reactive({
@@ -142,9 +143,14 @@
     </div>
     <div class="right">
       <div class="column">
-        <button @click="switchPage(router,'login')">
-          <span>{{ loginMessage }}</span>
-        </button>
+        <ButtonCode class="chat" @click="switchPage(router,'chat')">AI 聊天</ButtonCode>
+
+        <div class="login-btn">
+          <button class="login" @click="switchPage(router,'login')">
+            <span>{{ loginMessage }}</span>
+          </button>
+        </div>
+
       </div>
       <div class="content">
         <AnswerQuestionsCard></AnswerQuestionsCard>
@@ -175,6 +181,10 @@
 </template>
 
 <style scoped>
+  button{
+    height: 60px;
+  }
+
   .container-con{
     height: 100vh;
     width: 100%;
@@ -234,6 +244,9 @@
   .container-con .column{
     height: 60px;
     margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
   .container-con .right .content{
@@ -243,14 +256,14 @@
     justify-items: center;
   }
 
-  .column{
-    position: relative;
-  }
+
 
   /* 登录按钮 */
-  .column button {
+  .column .login {
+    outline: none;
     background: transparent;
-    position: absolute;
+    position: relative;
+    overflow: hidden;
     padding: 5px 8px;
     display: flex;
     align-items: center;
@@ -258,21 +271,19 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    border: 2px solid rgb(36, 41, 46);
+    border: 3px solid rgb(36, 41, 46);
     border-radius: 20px;
-    outline: none;
-    overflow: hidden;
     color: rgb(36, 41, 46);
     transition: color 0.3s 0.1s ease-out;
     text-align: center;
-    right: 30px;
+    margin-right: 2rem;
   }
 
-  .column button span {
+  .column .login span {
     margin: 10px;
   }
 
-  .column button::before {
+  .column .login::before {
     position: absolute;
     top: 0;
     right: 0;
@@ -289,12 +300,12 @@
     z-index: -1;
   }
 
-  .column button:hover {
+  .column .login:hover {
     color: #fff;
-    border: 2px solid rgb(36, 41, 46);
+    border: 3px solid rgb(36, 41, 46);
   }
 
-  .column button:hover::before {
+  .column .login:hover::before {
     box-shadow: inset 0 0 0 10em rgb(36, 41, 46);
   }
 

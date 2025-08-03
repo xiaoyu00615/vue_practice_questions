@@ -21,6 +21,11 @@ const routes = [
         path: '/use-topic',
         name:'UseTopic',
         component:()=> import('@/views/UseTopic.vue')
+    },
+    {
+        path: '/chat',
+        name:'SparkChat',
+        component:()=> import ('@/views/SparkChat.vue')
     }
 ]
 
