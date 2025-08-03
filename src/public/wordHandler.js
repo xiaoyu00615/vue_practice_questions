@@ -8,7 +8,7 @@ export const extractTextFromWord = (file) => {
 
         reader.onload = ((e)=>{
             const arrayBuffer = e.target.result
-            console.log(arrayBuffer)
+            // console.log(arrayBuffer)
             mammoth.extractRawText({arrayBuffer})
                 .then((result)=>{
                     resolve(result.value)

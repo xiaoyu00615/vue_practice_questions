@@ -55,3 +55,49 @@ export function saveArrData(key,data){
 export function readingArrData(str){
     return JSON.parse(localStorage.getItem(str))
 }
+
+
+export function handleTopic(topics){
+    // console.log(topics)
+
+    const topicBlock = topics.split(/(?=^\d+[,.。、])/gm).filter(q => q.trim());
+
+    console.log(topicBlock)
+
+    // 有没有正则
+    const reg = /^\d+[,.。、]/
+    const regTitle = /^(\d+)[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/s
+    const regOption = /([A-Z])[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/gs
+
+    let jsonTopic = []
+
+    for(let i = 0; i < topicBlock.length; i++){
+
+        // 分割
+        let title = topicBlock[i].match(regTitle)
+        const option = topicBlock[i].match(regOption)
+
+        if(!title && !option) title = topicBlock
+
+        title ?  title = title[0] : title = null
+
+
+        const obj = {
+            index:i,
+            title:title,
+            options:option,
+            type:'topic'
+        }
+
+
+        if(!reg.test(topicBlock[i])){
+            obj.type = 'explain'
+        }
+
+        jsonTopic.push(obj)
+    }
+
+    // console.log(jsonTopic)
+
+    return jsonTopic
+}
