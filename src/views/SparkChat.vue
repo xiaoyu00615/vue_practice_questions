@@ -1,5 +1,6 @@
 <template>
   <div class="spark-chat">
+    <ButtonBack class="back-size btn-back-size" @click="switchPage(router,'')"></ButtonBack>
     <!-- 聊天记录 -->
     <div class="chat-history" ref="chatHistoryRef">
       <div
@@ -7,7 +8,7 @@
           :key="index"
           :class="['message', msg.role]"
       >
-        <div class="avatar">{{ msg.role === 'user' ? '我' : 'AI' }}</div>
+        <div class="avatar">{{ msg.role === 'user' ? userName ? userName[0] : '我' : 'AI' }}</div>
         <div class="content">{{ msg.content }}</div>
       </div>
     </div>
@@ -32,90 +33,109 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue';
-import { sparkChatStream } from '@/public/sparkApi.js';
+  import { ref, nextTick, watch } from 'vue';
+  import { sparkChatStream } from '@/utils/sparkApi.js';
+  import {readingArrData} from "@/utils/utils.js";
+  import ButtonBack from "@/components/ButtonBack.vue";
+  import {switchPage} from "@/utils/public.js";
+  import {useRouter} from "vue-router";
 
-// 聊天记录引用（用于滚动到底部）
-const chatHistoryRef = ref(null);
-// 对话历史
-const messages = ref([
-  { role: 'assistant', content: '你好！我是基于讯飞星火大模型的助手，有什么可以帮你？' }
-]);
-// 用户输入
-const prompt = ref('');
-// 加载状态
-const loading = ref(false);
-// WebSocket连接关闭函数
-let closeConnection = null;
+  const router = useRouter()
 
-// 自动滚动到底部
-const scrollToBottom = () => {
-  nextTick(() => {
-    if (chatHistoryRef.value) {
-      chatHistoryRef.value.scrollTop = chatHistoryRef.value.scrollHeight;
+  const userName = ref(null)
+  // 判断没有登录状态
+  try {
+    userName.value = readingArrData('loginUser').userName
+  }catch (err){
+    console.log(err)
+    userName.value = null
+  }
+
+
+  // 聊天记录引用（用于滚动到底部）
+  const chatHistoryRef = ref(null);
+  // 对话历史
+  const messages = ref([
+    { role: 'assistant', content: '你好！我是基于讯飞星火大模型的助手，有什么可以帮你？' }
+  ]);
+  // 用户输入
+  const prompt = ref('');
+  // 加载状态
+  const loading = ref(false);
+  // WebSocket连接关闭函数
+  let closeConnection = null;
+
+  // 自动滚动到底部
+  const scrollToBottom = () => {
+    nextTick(() => {
+      if (chatHistoryRef.value) {
+        chatHistoryRef.value.scrollTop = chatHistoryRef.value.scrollHeight;
+      }
+    });
+  };
+
+  // 监听消息变化，自动滚动
+  watch(messages, scrollToBottom);
+
+  // 发送消息
+  const sendMessage = async () => {
+    const userInput = prompt.value.toString().trim();
+    if (!userInput || loading.value) return;
+
+    // 关闭可能存在的旧连接
+    if (closeConnection) {
+      closeConnection();
+    }
+
+    // 添加用户消息
+    messages.value.push({ role: 'user', content: userInput });
+    prompt.value = '';
+    loading.value = true;
+
+    // 添加AI消息占位
+    const aiMsgIndex = messages.value.length;
+    messages.value.push({ role: 'assistant', content: '' });
+
+    try {
+      // 提取历史对话（排除当前用户消息和AI占位）
+      const history = messages.value
+          .filter((_, index) => index < messages.value.length - 1)
+          .map(({ role, content }) => ({ role, content }));
+
+      // 调用流式API，实时更新内容
+      closeConnection = sparkChatStream(userInput, history, (chunk) => {
+        messages.value[aiMsgIndex].content += chunk;
+      });
+    } catch (error) {
+      // 显示错误信息
+      messages.value[aiMsgIndex].content = `❌ ${error.message}`;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // 组件卸载时关闭连接
+  const onUnmounted = (callback) => {
+    window.addEventListener('beforeunload', callback);
+    return () => window.removeEventListener('beforeunload', callback);
+  };
+
+  onUnmounted(() => {
+    if (closeConnection) {
+      closeConnection();
     }
   });
-};
-
-// 监听消息变化，自动滚动
-watch(messages, scrollToBottom);
-
-// 发送消息
-const sendMessage = async () => {
-  const userInput = prompt.value.trim();
-  if (!userInput || loading.value) return;
-
-  // 关闭可能存在的旧连接
-  if (closeConnection) {
-    closeConnection();
-  }
-
-  // 添加用户消息
-  messages.value.push({ role: 'user', content: userInput });
-  prompt.value = '';
-  loading.value = true;
-
-  // 添加AI消息占位
-  const aiMsgIndex = messages.value.length;
-  messages.value.push({ role: 'assistant', content: '' });
-
-  try {
-    // 提取历史对话（排除当前用户消息和AI占位）
-    const history = messages.value
-        .filter((_, index) => index < messages.value.length - 1)
-        .map(({ role, content }) => ({ role, content }));
-
-    // 调用流式API，实时更新内容
-    closeConnection = sparkChatStream(userInput, history, (chunk) => {
-      messages.value[aiMsgIndex].content += chunk;
-    });
-  } catch (error) {
-    // 显示错误信息
-    messages.value[aiMsgIndex].content = `❌ ${error.message}`;
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 组件卸载时关闭连接
-const onUnmounted = (callback) => {
-  window.addEventListener('beforeunload', callback);
-  return () => window.removeEventListener('beforeunload', callback);
-};
-
-onUnmounted(() => {
-  if (closeConnection) {
-    closeConnection();
-  }
-});
 </script>
 
 <style scoped>
+  @import "@/assets/public.css";
+
 .spark-chat {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
 }
 
 .chat-history {
@@ -136,9 +156,7 @@ onUnmounted(() => {
   animation: fadeIn 0.3s ease;
 }
 
-.message.user {
-  flex-direction: row-reverse;
-}
+
 
 .avatar {
   width: 36px;
@@ -223,5 +241,11 @@ button:disabled {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.back-size{
+  width: 15%;
+  position: absolute;
+  right: -15%;
 }
 </style>

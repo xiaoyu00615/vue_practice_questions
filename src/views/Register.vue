@@ -1,10 +1,10 @@
 <script setup>
-  import {switchPage} from "@/public/public.js";
+  import {switchPage} from "@/utils/public.js";
   import {useRouter} from "vue-router";
 
   import {reactive, ref, watch} from 'vue'
   import PromptFrame from "@/components/PromptFrame.vue";
-  import {randomCode, readingArrData, saveArrData} from "@/public/utils.js";
+  import {randomCode, readingArrData, saveArrData} from "@/utils/utils.js";
   import {onMounted} from "vue";
 
   const code = ref('kHi4D7')

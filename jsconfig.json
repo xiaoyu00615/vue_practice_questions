@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
+    "types": ["vite/client", "vue"],
+    "strict": true
   },
   "exclude": ["node_modules", "dist"]
 }

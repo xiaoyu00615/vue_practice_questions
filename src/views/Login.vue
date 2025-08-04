@@ -316,11 +316,11 @@
   </div>
 </template>
 <script setup>
-  import {switchPage} from "@/public/public.js";
+  import {switchPage} from "@/utils/public.js";
   import {useRouter} from "vue-router";
   import {reactive, ref, watch} from "vue";
   import PromptFrame from "@/components/PromptFrame.vue";
-  import {readingArrData, saveArrData} from "@/public/utils.js";
+  import {readingArrData, saveArrData} from "@/utils/utils.js";
 
   const router = useRouter()
 

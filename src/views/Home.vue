@@ -1,9 +1,9 @@
 <script setup>
   import {onMounted, reactive, ref, watch} from "vue";
 
-  import {switchPage} from '@/public/public.js'
-  import {countSize, handleTopic, readingArrData, splitFormat} from '@/public/utils'
-  import {extractTextFromWord} from '@/public/wordHandler.js'
+  import {switchPage} from '@/utils/public.js'
+  import {countSize, handleTopic, readingArrData, splitFormat} from '@/utils/utils'
+  import {extractTextFromWord} from '@/utils/wordHandler.js'
   import AnswerQuestionsCard from "@/components/AnswerQuestionsCard.vue";
   import PromptFrame from '@/components/PromptFrame.vue'
   import {useRouter} from "vue-router";

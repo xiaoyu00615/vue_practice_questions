@@ -31,3 +31,12 @@
     top:10%;
     left: 50%;
 }
+
+.btn{
+    height: 60px;
+    cursor: pointer;
+}
+
+.btn-back-size{
+    height: 60px;
+}
