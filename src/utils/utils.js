@@ -43,7 +43,13 @@ export function randomCode(str = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpq
  * @param data 保存的复杂数据
  */
 export function saveArrData(key,data){
-    localStorage.setItem(key,JSON.stringify(data))
+    try{
+        localStorage.setItem(key,JSON.stringify(data))
+    }catch (error){
+        console.log(error+'： 保存失败')
+        return false
+    }
+    return true
 }
 
 
@@ -53,15 +59,16 @@ export function saveArrData(key,data){
  * @returns {string}
  */
 export function readingArrData(str){
-    return JSON.parse(localStorage.getItem(str))
+    const data = localStorage.getItem(str);
+    return data ? JSON.parse(data) : null;
 }
 
 
-export function handleTopic(topics){
+export function handleTopic(topics,fileName){
     // console.log(topics)
-
-    const topicBlock = topics.split(/(?=^\d+[,.。、])/gm).filter(q => q.trim());
-
+    const [questionsPart] = topics.split(/\n\n(?=:)/);
+    const regex = /(?=(?:^|\n)\d+[.、）])/gm;
+    const topicBlock = questionsPart.split(regex).filter(q => q.trim());
     console.log(topicBlock)
 
     // 有没有正则
@@ -99,5 +106,8 @@ export function handleTopic(topics){
 
     // console.log(jsonTopic)
 
-    return jsonTopic
+    return {
+        [fileName] : jsonTopic,
+        fileName : fileName
+    }
 }

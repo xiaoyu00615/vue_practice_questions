@@ -10,6 +10,8 @@
   import Button from "@/components/Button.vue";
   import LookFileAnimate from "@/components/LookFileAnimate.vue";
   import ButtonCode from "@/components/ButtonCode.vue";
+  import ComOptionModal from "@/components/ComOptionModal.vue";
+  import ButtonOption from "@/components/ButtonOption.vue";
 
   const router = useRouter()
   const fileData = reactive({
@@ -21,6 +23,7 @@
   const WordText = ref(null)
   const timer = ref(null)
   const lookFile = ref(null)
+  const hasChoosetopic = ref(false)
 
   const jsonMessage = ref(null)
   const LookFileCom = ref(null)
@@ -70,7 +73,7 @@
   }
 
   function startFile(){
-    const jsonTopic = handleTopic(WordText.value[0])
+    const jsonTopic = handleTopic(WordText.value[0],fileData.fileName)
 
     if (!jsonTopic){
       promptMessage.type = 'error'
@@ -113,6 +116,11 @@
     promptMessage.message = `登录成功，你好 ${ localMes.userName }`
   })
 
+  function closeMessage(value){
+    LookFileCom.value = value
+    hasChoosetopic.value = value
+  }
+
 </script>
 
 <template>
@@ -145,6 +153,8 @@
       <div class="column">
         <ButtonCode class="chat" @click="switchPage(router,'chat')">AI 聊天</ButtonCode>
 
+        <ButtonOption @click="hasChoosetopic = true"></ButtonOption>
+
         <div class="login-btn">
           <button class="login" @click="switchPage(router,'login')">
             <span>{{ loginMessage }}</span>
@@ -165,6 +175,7 @@
           <template #front-content>依据自己平时答题目错误的题进行答题，统计时间，判断答题情况等，</template>
         </AnswerQuestionsCard>
       </div>
+
     </div>
   </div>
 
@@ -175,12 +186,16 @@
   </div>
 
 
-  <LookFileAnimate v-if="LookFileCom" :jsonMessages="jsonMessage"></LookFileAnimate>
+  <LookFileAnimate v-if="LookFileCom" :jsonMessages="jsonMessage" :fileName="fileData.fileName" @close-message="closeMessage">
+    <template #title>查看模型渲染数据</template>
+  </LookFileAnimate>
 
+  <ComOptionModal v-if="hasChoosetopic" @close-message="closeMessage"></ComOptionModal>
 
 </template>
 
 <style scoped>
+ @import "@/assets/public.css";
   button{
     height: 60px;
   }
@@ -310,14 +325,6 @@
   }
 
   /* 提示框 */
-  .prompt{
-    height: 92px;
-    width: 400px;
-    position:absolute;
-    transform: translate(-50%,-50%);
-    top:10%;
-    left: 50%;
-  }
 
   /* 文件输入 */
   .custum-file-upload {

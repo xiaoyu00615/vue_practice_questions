@@ -40,3 +40,42 @@
 .btn-back-size{
     height: 60px;
 }
+
+.img-close{
+    width: 55px;
+    height: 55px;
+    padding: 5px;
+}
+
+
+
+.prompt-pad{
+    padding: 0 5px;
+    font-weight: bold;
+}
+
+.prompt-important{
+    color: #FB2C36;
+}
+
+.prompt-info{
+    color: #DBEAFE;
+}
+
+.prompt-warning{
+    color: #F0B100;
+}
+
+.prompt-success{
+    color: #2B7FFF;
+}
+
+.prompt{
+    z-index: 1000;
+    height: 92px;
+    width: 400px;
+    position:absolute;
+    transform: translate(-50%,-50%);
+    top:10%;
+    left: 50%;
+}
