@@ -1,3 +1,4 @@
+
 // 处理 .js 文件
 declare module '*.js' {
     const content: any;

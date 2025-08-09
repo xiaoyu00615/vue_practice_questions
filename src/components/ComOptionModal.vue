@@ -2,21 +2,23 @@
     import {readingArrData} from "@/utils/utils.js";
     import {close,closeHover} from '@/assets/resources.ts'
 
-  import {onMounted, reactive, ref, watch} from "vue";
+    import {onMounted, reactive, ref, watch} from "vue";
 
-  import { localStorageTopicAll } from '@/utils/config.ts'
-  import PromptFrame from "@/components/PromptFrame.vue";
+    import { localStorageTopicAll,localStorageCurrentOptions } from '@/utils/config.ts'
+    import PromptFrame from "@/components/PromptFrame.vue";
+    import Button from "@/components/Button.vue";
 
-  const allTopic = ref()
-  const timer = ref()
+    const allTopic = ref()
+    const timer = ref()
 
-  console.log(localStorageTopicAll)
-  const promptMessage = reactive({
-    type:'',
-    message:''
-  })
+    const promptMessage = reactive({
+      type:'',
+      message:''
+    })
 
-  const toggleImgCLose = ref(close)
+    const toggleImgCLose = ref(close)
+
+    const chooseTopic = ref('')
 
 
   watch(promptMessage,(newValue,oldValue)=>{
@@ -39,8 +41,9 @@
       },300)
     }
 
+    const chooseJson = readingArrData(localStorageCurrentOptions)
     allTopic.value = topicAll
-    console.log(allTopic.value)
+    chooseTopic.value = chooseJson.fileName
   })
 
   const emit = defineEmits(['close-message'])
@@ -48,6 +51,9 @@
     emit(eventName,false)
   }
 
+  function saveChoose(){
+      console.log(chooseTopic.value)
+  }
 
 
 </script>
@@ -57,12 +63,14 @@
             <legend class="title"><slot name="option-title">选择答题库</slot> </legend>
 
             <label class="option" v-for="topic in allTopic" :for="topic.fileName">{{ topic.fileName }}
-              <input type="radio" name="status" class="radio" :id="topic.fileName" />
+              <input type="radio" name="status" class="radio" :id="topic.fileName" :value="topic.fileName" v-model="chooseTopic"/>
             </label>
 
             <div class="img-close btn pos" @click="closeMessage('close-message')">
               <img :src="toggleImgCLose" @mouseleave="toggleImgCLose = close" @mouseenter="toggleImgCLose = closeHover" alt="">
             </div>
+
+        <Button class="btn-pos" @click="saveChoose">选项此题库</Button>
       </div>
 
 
@@ -95,7 +103,7 @@
   transform: translate(-50%,-50%);
   top:50%;
   left:50%;
-  height: 80%;
+  height: 70%;
   overflow-y: scroll;
     position: relative;
 }
@@ -146,7 +154,7 @@
 }
 
 .modal{
-  height: 80%;
+  height: 70%;
   overflow-y: scroll;
   width: 100%;
   position: relative;
@@ -155,5 +163,14 @@
     right: 10px;
     top:10px;
     position: absolute;
+}
+.btn-pos{
+  position: absolute;
+  transform: translate(-50%,-50%);
+  bottom: 0;
+  left: 50%;
+}
+.btn-pos:active{
+  transform: translate(-50%,-50%) scale(1.1);
 }
 </style>

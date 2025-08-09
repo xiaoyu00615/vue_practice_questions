@@ -242,7 +242,9 @@ button:disabled {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
+.user{
+  flex-direction: row-reverse
+}
 .back-size{
   width: 15%;
   position: absolute;

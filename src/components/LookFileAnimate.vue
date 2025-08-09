@@ -3,8 +3,8 @@
   import {reactive, ref, watch} from "vue";
   import {close,closeHover} from '@/assets/resources.ts'
   import PromptFrame from "@/components/PromptFrame.vue";
-  import {readingArrData, saveArrData} from "@/utils/utils.js";
-  import {localStorageTopicAll} from '@/utils/config.ts'
+  import {saveArrData,readingArrData} from "@/utils/utils.js";
+  import {localStorageTopicAll , localStorageCurrentOptions} from '@/utils/config.ts'
 
 
   const props = defineProps({
@@ -53,9 +53,11 @@
 
     console.log(saveList)
     saveList.push(props.jsonMessages)
-    const hasSuccess = saveArrData(localStorageTopicAll,saveList)
 
-    if (!hasSuccess){
+    const hasSuccess = saveArrData(localStorageTopicAll,saveList)
+    const hasSuccessNow = saveArrData(localStorageCurrentOptions,props.jsonMessages)
+
+    if (!hasSuccess || !hasSuccessNow){
       promptMessage.type = 'error'
       promptMessage.message = '保存失败，数据不合法！'
       return
@@ -87,7 +89,8 @@
 
         <div class="topics">
           <div class="item-topic" v-for="item in jsonMessages[fileName]">
-            <p class="title">{{ item.title }}</p>
+            <p v-if="item.answer" class="title">{{ item.title }}  -->  答案：{{ item.answer }}</p>
+            <p v-else class="title">{{ item.title }}</p>
             <div class="options">
               <p class="item-option" v-for="option in item.options">{{ option }}</p>
             </div>
@@ -151,7 +154,7 @@
   }
 
   .mask .modal .topics .item-topic{
-    padding: 8px 0px;
+    padding: 8px 0;
     border-bottom: 2px dashed #000;
   }
 

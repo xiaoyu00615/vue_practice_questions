@@ -42,7 +42,7 @@ export function randomCode(str = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpq
  * @param key 保存的关键值
  * @param data 保存的复杂数据
  */
-export function saveArrData(key,data){
+export const saveArrData = (key,data)=> {
     try{
         localStorage.setItem(key,JSON.stringify(data))
     }catch (error){
@@ -65,6 +65,7 @@ export function readingArrData(str){
 
 
 export function handleTopic(topics,fileName){
+
     // console.log(topics)
     const [questionsPart] = topics.split(/\n\n(?=:)/);
     const regex = /(?=(?:^|\n)\d+[.、）])/gm;
@@ -76,23 +77,33 @@ export function handleTopic(topics,fileName){
     const regTitle = /^(\d+)[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/s
     const regOption = /([A-Z])[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/gs
 
+    const regAnswer = /答案[：:][a-zA-Z]+/g
+
+
     let jsonTopic = []
 
     for(let i = 0; i < topicBlock.length; i++){
 
         // 分割
         let title = topicBlock[i].match(regTitle)
+
         const option = topicBlock[i].match(regOption)
 
         if(!title && !option) title = topicBlock
+        title ?  title = title[0].split('\n')[0] : title = null
 
-        title ?  title = title[0] : title = null
+        let answers = topicBlock[i].match(regAnswer)
 
+        answers ?  answers = answers.toString().match(/[a-zA-Z]+/) : answers = null
 
+        if (answers) answers = answers[0]
+
+        console.log(answers)
         const obj = {
             index:i,
             title:title,
             options:option,
+            answer:answers,
             type:'topic'
         }
 
@@ -101,10 +112,10 @@ export function handleTopic(topics,fileName){
             obj.type = 'explain'
         }
 
+
         jsonTopic.push(obj)
     }
-
-    // console.log(jsonTopic)
+    console.log(jsonTopic)
 
     return {
         [fileName] : jsonTopic,

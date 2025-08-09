@@ -164,6 +164,10 @@
       </div>
       <div class="content">
         <AnswerQuestionsCard></AnswerQuestionsCard>
+        <AnswerQuestionsCard front-color="#d6a960" back-color="#60d66e">
+          <template #front-title>开始背题</template>
+          <template #front-content>依据自己设计的题进行答题，统计学习时间，进行背题。</template>
+        </AnswerQuestionsCard>
         <AnswerQuestionsCard front-color="#775ad6" back-color="#5ad6b5">
           <template #front-title>自定义答题</template>
           <template #front-content>依据自己设计的题进行答题，统计时间，判断答题情况等，</template>
@@ -195,7 +199,13 @@
 </template>
 
 <style scoped>
- @import "@/assets/public.css";
+  @import "@/assets/public.css";
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   button{
     height: 60px;
   }
@@ -376,5 +386,14 @@
   }
   .mar{
     margin-top: 20px;
+  }
+  
+  @media (max-width: 1440px) {
+    .container-con .right .content{
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 50px;
+      justify-items: center;
+    }
   }
 </style>
