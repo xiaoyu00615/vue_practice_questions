@@ -1,5 +1,9 @@
 <script setup lang="ts">
-  defineProps({
+
+  import {useRouter} from "vue-router";
+  import { switchPage } from "@/utils/public.js"
+  
+  const props = defineProps({
     frontColor:{
       type:String,
       default:'#b2d642'
@@ -7,8 +11,17 @@
     backColor:{
       type:String,
       default:'#42b2d6'
+    },
+    path:{
+      type:String,
+      default:''
     }
   })
+
+  const router = useRouter()
+
+
+
 </script>
 
 <template>
@@ -29,7 +42,7 @@
           borderStyle : 'dashed',
           borderWidth : '2px',
           borderColor : backColor
-         }">开始 GO!</h2>
+         }" @click="switchPage(router,props.path)">开始 GO!</h2>
       </div>
     </div>
   </div>

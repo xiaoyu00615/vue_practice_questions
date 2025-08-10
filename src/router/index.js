@@ -18,14 +18,20 @@ const routes = [
         component:()=> import('@/views/Register.vue')
     },
     {
-        path: '/use-topic',
-        name:'UseTopic',
-        component:()=> import('@/views/UseTopic.vue')
-    },
-    {
         path: '/chat',
         name:'SparkChat',
         component:()=> import ('@/views/SparkChat.vue')
+    },
+    {
+        path: '/answer-question',
+        name:'AnswerQuestion',
+        component:()=> import('@/views/AnswerQuestion.vue')
+    },
+    {
+        path: '/back-question',
+        name:'BackQuestion',
+        component:()=> import('@/views/BackQuestion.vue')
+
     }
 ]
 

@@ -340,7 +340,7 @@
   console.log(allUser.value)
 
   function login(){
-    console.log(allUser.value.length)
+    if (!allUser.value) return;
     if (!intValue.userName && !intValue.password){
       promptMessage.type = 'warning'
       promptMessage.message = '没有检测到输入信息！'

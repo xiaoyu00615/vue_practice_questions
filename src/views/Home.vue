@@ -163,8 +163,8 @@
 
       </div>
       <div class="content">
-        <AnswerQuestionsCard></AnswerQuestionsCard>
-        <AnswerQuestionsCard front-color="#d6a960" back-color="#60d66e">
+        <AnswerQuestionsCard path="answer-question"></AnswerQuestionsCard>
+        <AnswerQuestionsCard front-color="#d6a960" back-color="#60d66e" path="back-question">
           <template #front-title>开始背题</template>
           <template #front-content>依据自己设计的题进行答题，统计学习时间，进行背题。</template>
         </AnswerQuestionsCard>
