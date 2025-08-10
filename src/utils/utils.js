@@ -75,7 +75,7 @@ export function handleTopic(topics,fileName){
     // 有没有正则
     const reg = /^\d+[,.。、]/
     const regTitle = /^(\d+)[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/s
-    const regOption = /([A-Z])[,.。、]\s*(.*?)(?=[A-Z][,.。、]|$)/gs
+    const regOption = /([a-zA-Z]+)[,.。、:：]\s*(.*?)(?=[A-Z][,.。、]|$)/gs
 
     const regAnswer = /答案[：:][a-zA-Z]+/g
 
@@ -87,10 +87,13 @@ export function handleTopic(topics,fileName){
         // 分割
         let title = topicBlock[i].match(regTitle)
 
+
         const option = topicBlock[i].match(regOption)
 
         if(!title && !option) title = topicBlock
         title ?  title = title[0].split('\n')[0] : title = null
+
+        if (!title) title = topicBlock[0].split('\n')[0]
 
         let answers = topicBlock[i].match(regAnswer)
 

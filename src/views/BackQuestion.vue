@@ -49,6 +49,10 @@
 </template>
 
 <style scoped>
+  *,html{
+    scroll-behavior:smooth;
+  }
+
   #back-size{
     height:60px;
     width: 130px;

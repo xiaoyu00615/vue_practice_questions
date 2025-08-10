@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 
   import {useRouter} from "vue-router";
   import { switchPage } from "@/utils/public.js"
@@ -15,11 +15,30 @@
     path:{
       type:String,
       default:''
+    },
+    currentJson:{
+      default:'null',
+      required:true
     }
   })
 
   const router = useRouter()
 
+  const emit = defineEmits(['gave-message'])
+
+  function closeMessage(eventName,obj){
+    emit(eventName,obj)
+  }
+
+  function cardSWitchPage() {
+    console.log(props.currentJson)
+    if (!props.currentJson) {
+      closeMessage('gave-message',{type:'error',message:'当前没有数据进行作答，请前往添加！'})
+      switchPage(router,'')
+      return
+    }
+    switchPage(router,props.path)
+  }
 
 
 </script>
@@ -42,7 +61,7 @@
           borderStyle : 'dashed',
           borderWidth : '2px',
           borderColor : backColor
-         }" @click="switchPage(router,props.path)">开始 GO!</h2>
+         }" @click="cardSWitchPage">开始 GO!</h2>
       </div>
     </div>
   </div>

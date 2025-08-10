@@ -19,13 +19,21 @@
     }
   })
 
+
+  console.log(props.jsonMessages)
   const toggleImgCLose = ref(close)
 
-  const emit = defineEmits(['close-message'])
+  const emit = defineEmits(['close-message','save-message'])
 
   function closeMessage(eventName){
     emit(eventName,false)
   }
+
+  function saveMessage(){
+    emit('save-message',true)
+  }
+
+
 
   const promptMessage = reactive({
     type:'',
@@ -65,6 +73,7 @@
 
     promptMessage.type = 'success'
     promptMessage.message = '数据已保存完成，正在返回！'
+    saveMessage()
 
     setTimeout(()=>{
       closeMessage('close-message')

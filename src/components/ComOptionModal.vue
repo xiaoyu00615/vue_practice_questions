@@ -1,5 +1,5 @@
 <script setup>
-    import {readingArrData} from "@/utils/utils.js";
+    import {readingArrData, saveArrData} from "@/utils/utils.js";
     import {close,closeHover} from '@/assets/resources.ts'
 
     import {onMounted, reactive, ref, watch} from "vue";
@@ -7,6 +7,8 @@
     import { localStorageTopicAll,localStorageCurrentOptions } from '@/utils/config.ts'
     import PromptFrame from "@/components/PromptFrame.vue";
     import Button from "@/components/Button.vue";
+    import {switchPage} from "@/utils/public.js";
+    import router from "@/router/index.js";
 
     const allTopic = ref()
     const timer = ref()
@@ -19,6 +21,7 @@
     const toggleImgCLose = ref(close)
 
     const chooseTopic = ref('')
+
 
 
   watch(promptMessage,(newValue,oldValue)=>{
@@ -42,17 +45,40 @@
     }
 
     const chooseJson = readingArrData(localStorageCurrentOptions)
+    if (!chooseJson) return
+
     allTopic.value = topicAll
     chooseTopic.value = chooseJson.fileName
   })
 
-  const emit = defineEmits(['close-message'])
-  function closeMessage(eventName){
-    emit(eventName,false)
+  const emit = defineEmits(['close-message','choose-message'])
+  function Message(eventName,value){
+    emit(eventName,value)
   }
+
+
 
   function saveChoose(){
       console.log(chooseTopic.value)
+      console.log(allTopic.value)
+
+    let chooseFile
+    try {
+       chooseFile = allTopic.value.filter((topic) => {
+        return topic.fileName === chooseTopic.value
+      })
+    }catch (e){
+      console.log(e)
+      promptMessage.type = 'error'
+      promptMessage.message = '当前没有选择的到题目文档，请添加后选择！'
+
+      return
+    }
+
+      saveArrData(localStorageCurrentOptions,chooseFile[0])
+
+
+      Message('close-message',false)
   }
 
 
@@ -66,7 +92,7 @@
               <input type="radio" name="status" class="radio" :id="topic.fileName" :value="topic.fileName" v-model="chooseTopic"/>
             </label>
 
-            <div class="img-close btn pos" @click="closeMessage('close-message')">
+            <div class="img-close btn pos" @click="Message('close-message',false)">
               <img :src="toggleImgCLose" @mouseleave="toggleImgCLose = close" @mouseenter="toggleImgCLose = closeHover" alt="">
             </div>
 

@@ -12,6 +12,7 @@
   import ButtonCode from "@/components/ButtonCode.vue";
   import ComOptionModal from "@/components/ComOptionModal.vue";
   import ButtonOption from "@/components/ButtonOption.vue";
+  import {localStorageCurrentOptions} from "@/utils/config.js";
 
   const router = useRouter()
   const fileData = reactive({
@@ -32,6 +33,10 @@
     type:'',
     message:''
   })
+
+  const currentJson = ref(null)
+
+  init()
 
   const fileMessage = ref('点击选择文件（.docx）')
 
@@ -73,11 +78,19 @@
   }
 
   function startFile(){
-    const jsonTopic = handleTopic(WordText.value[0],fileData.fileName)
+    let jsonTopic
+    try{
+      jsonTopic = handleTopic(WordText.value[0],fileData.fileName)
+    }catch (e){
+      console.log(e)
+      jsonTopic = null
+    }
+
 
     if (!jsonTopic){
       promptMessage.type = 'error'
       promptMessage.message = '文件处理失败'
+      return
     }else{
       promptMessage.type = 'success'
       promptMessage.message = '文件处理成功，点击查看模型显示处理效果！'
@@ -117,8 +130,33 @@
   })
 
   function closeMessage(value){
+    console.log(value)
     LookFileCom.value = value
     hasChoosetopic.value = value
+  }
+
+  function getAnswerQuestionsCardEmit(value){
+    promptMessage.type = value.type
+    promptMessage.message = value.message
+  }
+
+
+  function getCurrentJson(){
+    const json = readingArrData(localStorageCurrentOptions)
+    if (!json) return
+
+    console.log(json)
+    currentJson.value = json
+    console.log(currentJson.value)
+  }
+
+  function saveLookFileAnimateData(value){
+    console.log(value,'拿到消息了')
+    currentJson.value = readingArrData(localStorageCurrentOptions)
+  }
+
+  function init(){
+    getCurrentJson()
   }
 
 </script>
@@ -163,18 +201,34 @@
 
       </div>
       <div class="content">
-        <AnswerQuestionsCard path="answer-question"></AnswerQuestionsCard>
-        <AnswerQuestionsCard front-color="#d6a960" back-color="#60d66e" path="back-question">
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            path="answer-question"
+            @gave-message="getAnswerQuestionsCardEmit"></AnswerQuestionsCard>
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            front-color="#d6a960"
+            back-color="#60d66e"
+            path="back-question"
+            @gave-message="getAnswerQuestionsCardEmit">
           <template #front-title>开始背题</template>
           <template #front-content>依据自己设计的题进行答题，统计学习时间，进行背题。</template>
         </AnswerQuestionsCard>
-        <AnswerQuestionsCard front-color="#775ad6" back-color="#5ad6b5">
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            front-color="#775ad6"
+            back-color="#5ad6b5"
+            @gave-message="getAnswerQuestionsCardEmit">
           <template #front-title>自定义答题</template>
           <template #front-content>依据自己设计的题进行答题，统计时间，判断答题情况等，</template>
           <template #back-title>注意事项</template>
           <template #back-content>进入后会开始计时，直接退出会失去答题进度（建议提交后退出！）</template>
         </AnswerQuestionsCard>
-        <AnswerQuestionsCard front-color="#de315d" back-color="#de31b4">
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            front-color="#de315d"
+            back-color="#de31b4"
+            @gave-message="getAnswerQuestionsCardEmit">
           <template #front-title>错题本答题</template>
           <template #front-content>依据自己平时答题目错误的题进行答题，统计时间，判断答题情况等，</template>
         </AnswerQuestionsCard>
@@ -190,11 +244,11 @@
   </div>
 
 
-  <LookFileAnimate v-if="LookFileCom" :jsonMessages="jsonMessage" :fileName="fileData.fileName" @close-message="closeMessage">
+  <LookFileAnimate v-if="LookFileCom" :jsonMessages="jsonMessage" :fileName="fileData.fileName" @close-message="closeMessage" @save-message="saveLookFileAnimateData">
     <template #title>查看模型渲染数据</template>
   </LookFileAnimate>
 
-  <ComOptionModal v-if="hasChoosetopic" @close-message="closeMessage"></ComOptionModal>
+  <ComOptionModal v-if="hasChoosetopic" @close-message="closeMessage" @choose-message="saveLookFileAnimateData"></ComOptionModal>
 
 </template>
 
