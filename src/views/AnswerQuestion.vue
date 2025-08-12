@@ -1,19 +1,38 @@
 <script setup>
-  import { readingArrData } from '@/utils/utils.js';
+  import {compareAnswerFun, extractAnswer, mappingLetter, readingArrData} from '@/utils/utils.js';
   import {localStorageCurrentOptions} from "@/utils/config.js";
-  import {ref} from "vue";
-  import {upTopic,upTopicHover,downTopic,downTopicHover} from '@/assets/resources.js'
+  import {reactive, ref, watch} from "vue";
+  import {upTopic,upTopicHover,downTopic,downTopicHover,answerCardImg,answerCardHoverImg} from '@/assets/resources.js'
   import TimerSet from "@/components/TimerSet.vue";
+  import PromptFrame from "@/components/PromptFrame.vue";
+  import ButtonAiAnswer from "@/components/ButtonAiAnswer.vue";
 
   const imgUpTopic = ref(upTopic)
   const imgDownTopic = ref(downTopic)
+  const imgAnswerCard = ref(answerCardImg)
+
+  const timer = ref()
+  const timerNext = ref()
+  const promptMessage = reactive({
+    type:'',
+    message:''
+  })
+
 
   const currentJson = readingArrData(localStorageCurrentOptions)
   const fileName = currentJson.fileName
   const jsonData = currentJson[fileName]
   const topicLength = jsonData.length
+  let answerJson = []
+
+  const trueTopicNum = ref(0)
+  const falseTopicNum = ref(0)
 
   const currentIndex = ref(0)
+
+  let answerCard = new Array(topicLength).fill(undefined)
+
+  init()
 
   function nextTopic(index){
     if (index >= topicLength - 1){
@@ -29,6 +48,93 @@
     return --index
   }
 
+  function clickChoose(event){
+    const standardAnswer = answerJson[currentIndex.value]
+    // 判断这道题是否有答案
+    if (standardAnswer === null){
+      promptMessage.type = 'warning'
+      promptMessage.message = '此题不可提交，点击下一题开始答题！'
+      return
+    }
+
+    // 判断选择过了吗
+    if (answerCard[currentIndex.value] !== undefined) return;
+
+
+
+    const clickDemo = event.target
+    const parentDemo = [...clickDemo.parentNode.children]
+    // 单击选择的答案
+    const topicAnswer = mappingLetter(clickDemo.dataset.index)
+    // 保存答题卡选项
+    answerCard[currentIndex.value] = topicAnswer
+
+    // console.log("点击题目的答案："+topicAnswer,"标准答案："+standardAnswer)
+    const compareAnswer = compareAnswerFun(topicAnswer,standardAnswer)
+
+    // 渲染逻辑
+    if (compareAnswer){
+      delayedNext(800)
+
+      promptMessage.type = 'success'
+      promptMessage.message = '(^∇^*) 答对啦！'+  "正确：" + standardAnswer
+
+      clickDemo.classList.add('topic-success')
+    }else{
+      delayedNext(1200)
+
+      promptMessage.type = 'error'
+      promptMessage.message = 'ヾ(≧へ≦)〃 答错啦！' + "正确：" + standardAnswer
+      parentDemo.forEach((demo)=>{
+        let choose = compareAnswerFun(mappingLetter(demo.dataset.index),standardAnswer)
+
+        if (!choose){
+          demo.classList.add('topic-warning')
+        }else{
+          demo.classList.add('topic-success')
+        }
+      })
+      clickDemo.classList.remove('topic-warning')
+      clickDemo.classList.add('topic-error')
+    }
+
+  }
+
+  // 保存不能作答的选项
+  function saveChoose(){
+    answerJson.forEach((answer,index)=>{
+      if (answer === null){
+        answerCard[index] = null
+      }
+    })
+  }
+
+  function init(){
+    answerJson = extractAnswer(jsonData,'answer')
+    console.log(answerJson)
+    saveChoose()
+  }
+
+  function delayedNext(timerNum){
+    if (timerNext.value) clearTimeout(timerNext.value)
+
+    timerNext.value = setTimeout(()=>{
+      nextTopic(currentIndex.value++)
+    },timerNum)
+
+  }
+
+
+  watch(promptMessage,(newValue,oldValue)=>{
+    // console.log(newValue,oldValue)
+    if (timer.value){
+      clearTimeout(timer.value)
+    }
+
+    timer.value = setTimeout(()=>{
+      promptMessage.type = ''
+    },2000)
+  })
 </script>
 
 <template>
@@ -40,25 +146,46 @@
           {{ item.title }}
         </div>
         <div class="options">
-          <p v-for="option in item.options">
+          <p v-for="(option,index) in item.options" @click="clickChoose" :data-index="index">
             {{ option }}
           </p>
         </div>
       </div>
 
     </div>
+    <div class="toolbar">
 
-    <div class="btn-toggle flex">
-      <div class="up-topic btn"
-           @mouseenter="imgUpTopic = upTopicHover"
-           @mouseleave="imgUpTopic = upTopic"
-           @click="currentIndex = previousTopic(currentIndex)"><img :src="imgUpTopic" alt=""></div>
-      <div class="down-topic btn"
-           @mouseenter="imgDownTopic = downTopicHover"
-           @mouseleave="imgDownTopic = downTopic"
-           @click="currentIndex = nextTopic(currentIndex)"><img :src="imgDownTopic" alt=""></div>
+      <!-- 答题卡 -->
+      <div class="answer-card cur-p"
+           @mouseenter="imgAnswerCard = answerCardHoverImg"
+           @mouseleave="imgAnswerCard = answerCardImg">
+        <img :src="imgAnswerCard" alt="">
+      </div>
+
+      <!-- AI 解题 -->
+      <ButtonAiAnswer></ButtonAiAnswer>
+
+      <!-- 切换题目按钮 -->
+      <div class="btn-toggle flex">
+        <div class="up-topic btn"
+             @mouseenter="imgUpTopic = upTopicHover"
+             @mouseleave="imgUpTopic = upTopic"
+             @click="currentIndex = previousTopic(currentIndex)"><img :src="imgUpTopic" alt=""></div>
+        <div class="down-topic btn"
+             @mouseenter="imgDownTopic = downTopicHover"
+             @mouseleave="imgDownTopic = downTopic"
+             @click="currentIndex = nextTopic(currentIndex)"><img :src="imgDownTopic" alt=""></div>
+      </div>
     </div>
 
+
+    <TimerSet class="pos-timer"></TimerSet>
+
+    <div class="prompt" v-if="promptMessage.type">
+      <PromptFrame :messageType="promptMessage.type">
+        <template v-slot:[promptMessage.type]>{{ promptMessage.message }}</template>
+      </PromptFrame>
+    </div>
   </div>
 </template>
 
@@ -102,10 +229,21 @@
   }
 
   .content .btn-toggle{
-    position: fixed;
-    bottom: 100px;
-    right: 100px;
+
     gap: 20px;
+  }
+  .toolbar{
+    position: fixed;
+    bottom: 0;
+    height: 100px;
+    background: #e8e8e8;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+    border-top: 3px solid #333;
+    box-shadow: 0 -2px 5px 0 rgba(0,0,0,.2);
   }
 
   .content .btn-toggle .btn{
@@ -131,4 +269,11 @@
   .content .btn-toggle .btn img{
     width: 40px;
   }
+
+  .pos-timer{
+    position: absolute;
+    right: 0;
+  }
+
+
 </style>

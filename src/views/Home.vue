@@ -108,7 +108,7 @@
 
   watch(promptMessage,(newValue,oldValue)=>{
     // console.log(newValue,oldValue)
-    if (timer){
+    if (timer.value){
       clearTimeout(timer.value)
     }
 

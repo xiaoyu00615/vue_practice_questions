@@ -125,3 +125,71 @@ export function handleTopic(topics,fileName){
         fileName : fileName
     }
 }
+
+
+/**
+ * 格式化数字 转换时间
+ * @param num 数字 Number
+ * @returns {string} 返回一个格式化后的字符串
+ */
+export function timerConvert(num){
+
+    // 计算小时：1小时 = 3600秒
+    const hours = Math.floor(num / 3600).toString().padStart(2,'0');
+    // 计算剩余秒数中包含的分钟：1分钟 = 60秒
+    const minutes = Math.floor((num % 3600) / 60).toString().padStart(2,'0');
+    // 剩余的秒数
+    const seconds = (num % 60).toString().padStart(2,'0');
+
+    return `${hours}:${minutes}:${seconds}`
+}
+
+
+/**
+ * 提取数据项
+ * @param jsonList 数据表
+ * @param keyName key的名字
+ * @returns {*[]} 返回一个数组单项数据
+ */
+export function extractAnswer(jsonList,keyName){
+    let answerJson = []
+    jsonList.forEach((item)=>{
+        answerJson.push(item[keyName])
+    })
+
+    return answerJson
+}
+
+/**
+ * 映射答案表
+ * @param num 数字
+ * @returns {string} 返回答案
+ */
+export function mappingLetter(num){
+    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'][num];
+}
+
+
+/**
+ * 判断选择答案和标准答案
+ * @param topicAnswer 题目答案
+ * @param standardAnswer 标准答案
+ * @return { boolean } 返回布尔值
+ */
+export function compareAnswerFun(topicAnswer,standardAnswer){
+    // console.log(standardAnswer.length)
+
+    if (standardAnswer.length === 1 && topicAnswer === standardAnswer){
+        return true;
+    }
+
+    if (standardAnswer > 1){
+        // return
+        console.log("多选")
+    }
+
+    return false
+
+}
+
+

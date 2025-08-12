@@ -10,6 +10,11 @@ import upTopicHover from '@/assets/icons/up-topic-hover.png'
 import downTopic from '@/assets/icons/down-topic.png'
 import downTopicHover from '@/assets/icons/down-topic-hover.png'
 
+import clock from '@/assets/icons/clock.png'
+
+import answerCardImg from '@/assets/icons/answer-card.png'
+import answerCardHoverImg from '@/assets/icons/answer-card-hover.png'
+
 export{
     imgBack,
     imgBackHover,
@@ -19,5 +24,10 @@ export{
     upTopic,
     upTopicHover,
     downTopic,
-    downTopicHover
+    downTopicHover,
+
+    clock,
+
+    answerCardImg,
+    answerCardHoverImg
 }

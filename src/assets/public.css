@@ -83,3 +83,19 @@
     top:10%;
     left: 50%;
 }
+
+.topic-error{
+    color: #FB2C36;
+}
+
+.topic-success{
+    color: #00A63E;
+}
+
+.topic-warning{
+    color: #F0B100;
+}
+
+.cur-p{
+    cursor: pointer;
+}
