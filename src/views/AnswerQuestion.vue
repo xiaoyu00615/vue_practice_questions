@@ -2,14 +2,32 @@
   import {compareAnswerFun, extractAnswer, mappingLetter, readingArrData} from '@/utils/utils.js';
   import {localStorageCurrentOptions} from "@/utils/config.js";
   import {reactive, ref, watch} from "vue";
-  import {upTopic,upTopicHover,downTopic,downTopicHover,answerCardImg,answerCardHoverImg} from '@/assets/resources.js'
+  import {
+    upTopic,
+    upTopicHover,
+    downTopic,
+    downTopicHover,
+    answerCardImg,
+    answerCardHoverImg,
+    backHome,
+    backHomeHover,
+    notebook,
+    notebookHover
+  } from '@/assets/resources.js'
   import TimerSet from "@/components/TimerSet.vue";
   import PromptFrame from "@/components/PromptFrame.vue";
   import ButtonAiAnswer from "@/components/ButtonAiAnswer.vue";
+  import ModalAnswerCard from "@/components/ModalAnswerCard.vue";
+  import {switchPage} from "@/utils/public.js";
+  import {useRouter} from "vue-router";
+  import ModalNoteBook from "@/components/ModalNoteBook.vue";
 
+  const router = useRouter()
   const imgUpTopic = ref(upTopic)
   const imgDownTopic = ref(downTopic)
   const imgAnswerCard = ref(answerCardImg)
+  const imgBackHome = ref(backHome)
+  const imgNoteBook = ref(notebook)
 
   const timer = ref()
   const timerNext = ref()
@@ -18,6 +36,8 @@
     message:''
   })
 
+  const hasShowAnswerCard = ref(false)
+  const hasShowNoteBook = ref(false)
 
   const currentJson = readingArrData(localStorageCurrentOptions)
   const fileName = currentJson.fileName
@@ -97,6 +117,7 @@
       clickDemo.classList.remove('topic-warning')
       clickDemo.classList.add('topic-error')
     }
+    console.log(answerCard)
 
   }
 
@@ -135,14 +156,26 @@
       promptMessage.type = ''
     },2000)
   })
+
+  function closeMessage(value){
+    hasShowAnswerCard.value = value
+    hasShowNoteBook.value = value
+  }
+
+  function chooseMessage(value){
+    hasShowAnswerCard.value = false
+    currentIndex.value = value
+
+  }
+
 </script>
 
 <template>
   <div class="content">
     <div class="container-content" :style="{transform:`translate(-${currentIndex}00%,0)`}">
       <div class="item-block" v-for="(item,index) in jsonData" :style="{transform:`translate(${index}00%,0)`}">
-        <div v-if="!(index % 10)" :id="index"></div>
         <div class="title">
+          <div class="note scale-primary-1"></div>
           {{ item.title }}
         </div>
         <div class="options">
@@ -150,28 +183,46 @@
             {{ option }}
           </p>
         </div>
+        <div class="answer-prompt" v-show="answerCard[currentIndex] !== null && answerCard[currentIndex] !== undefined">
+          <p class="false-answer">选择的答案：{{ answerCard[currentIndex] }}</p>
+          <p class="true-answer">正确的答案：{{ answerJson[currentIndex] }}</p>
+        </div>
       </div>
 
     </div>
     <div class="toolbar">
+      <!-- 返回首页 -->
+      <div class="back-home cur-p scale-primary-1" @click="switchPage(router,'')"
+           @mouseenter="imgBackHome = backHomeHover"
+           @mouseleave="imgBackHome = backHome">
+        <img :src="imgBackHome" alt="">
+      </div>
+
+      <!-- 记录笔记 -->
+      <div class="back-notebook cur-p scale-primary-1"
+           @click="hasShowNoteBook = true"
+           @mouseenter="imgNoteBook = notebookHover"
+           @mouseleave="imgNoteBook = notebook">
+        <img :src="imgNoteBook" alt="">
+      </div>
 
       <!-- 答题卡 -->
-      <div class="answer-card cur-p"
+      <div class="answer-card cur-p scale-primary-1" @click="hasShowAnswerCard = true"
            @mouseenter="imgAnswerCard = answerCardHoverImg"
            @mouseleave="imgAnswerCard = answerCardImg">
         <img :src="imgAnswerCard" alt="">
       </div>
 
       <!-- AI 解题 -->
-      <ButtonAiAnswer></ButtonAiAnswer>
+      <ButtonAiAnswer class="scale-primary-1"></ButtonAiAnswer>
 
       <!-- 切换题目按钮 -->
       <div class="btn-toggle flex">
-        <div class="up-topic btn"
+        <div class="up-topic btn scale-primary-1"
              @mouseenter="imgUpTopic = upTopicHover"
              @mouseleave="imgUpTopic = upTopic"
              @click="currentIndex = previousTopic(currentIndex)"><img :src="imgUpTopic" alt=""></div>
-        <div class="down-topic btn"
+        <div class="down-topic btn scale-primary-1"
              @mouseenter="imgDownTopic = downTopicHover"
              @mouseleave="imgDownTopic = downTopic"
              @click="currentIndex = nextTopic(currentIndex)"><img :src="imgDownTopic" alt=""></div>
@@ -186,6 +237,14 @@
         <template v-slot:[promptMessage.type]>{{ promptMessage.message }}</template>
       </PromptFrame>
     </div>
+
+    <ModalAnswerCard
+        v-if="hasShowAnswerCard"
+        :topicNum="answerCard"
+        @close-message="closeMessage"
+        @choose-message="chooseMessage"></ModalAnswerCard>
+
+    <ModalNoteBook :topicIndex = currentIndex v-if="hasShowNoteBook" @close-message="closeMessage"></ModalNoteBook>
   </div>
 </template>
 
@@ -213,13 +272,19 @@
 
   .container-content .item-block .title{
     font-size: 25px;
-    padding: 10px 20px;
+    padding: 10px 20px 5px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 10px;
   }
+
+
 
   .container-content .item-block .options p{
     font-size: 22px;
-    padding-left:30px ;
+    padding-left:50px ;
     line-height: 60px;
     cursor: pointer;
   }
@@ -275,5 +340,23 @@
     right: 0;
   }
 
+  .answer-prompt{
+    padding: 10px 50px;
+    font-size: 20px;
+    line-height: 40px;
+  }
+
+  .note{
+    border-radius: 10px;
+    overflow: hidden;
+    border:20px solid transparent;
+    border-top-color: #888;
+    margin-top: 18px;
+    cursor: pointer;
+  }
+
+  .note:hover{
+    border-top-color: #000;
+  }
 
 </style>

@@ -42,14 +42,12 @@
 }
 
 .img-close{
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     padding: 5px;
+    display: flex;
 }
 
-.btn-back{
-
-}
 
 
 
@@ -98,4 +96,11 @@
 
 .cur-p{
     cursor: pointer;
+}
+
+.scale-primary-1{
+    transition: transform .2s;
+}
+.scale-primary-1:hover{
+    transform: scale(1.1);
 }

@@ -15,6 +15,13 @@ import clock from '@/assets/icons/clock.png'
 import answerCardImg from '@/assets/icons/answer-card.png'
 import answerCardHoverImg from '@/assets/icons/answer-card-hover.png'
 
+import backHome from '@/assets/icons/back-home.png'
+import backHomeHover from '@/assets/icons/back-home-hover.png'
+
+import notebook from '@/assets/icons/notebook.png'
+import notebookHover from '@/assets/icons/notebook-hover.png'
+
+
 export{
     imgBack,
     imgBackHover,
@@ -29,5 +36,11 @@ export{
     clock,
 
     answerCardImg,
-    answerCardHoverImg
+    answerCardHoverImg,
+
+    backHome,
+    backHomeHover,
+
+    notebook,
+    notebookHover
 }

@@ -27,3 +27,8 @@
     background: #fff;
     border-radius: 20px;
 }
+
+.mask .modal .content-title{
+    font-size: 28px;
+    text-align: center;
+}

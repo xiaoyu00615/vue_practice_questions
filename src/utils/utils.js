@@ -120,9 +120,18 @@ export function handleTopic(topics,fileName){
     }
     console.log(jsonTopic)
 
+    const unArr = new Array(jsonTopic.length).fill(undefined)
+
+
     return {
         [fileName] : jsonTopic,
-        fileName : fileName
+        fileName : fileName,
+        explain : {
+                explainFile:unArr,
+                explainWrite:unArr,
+                explainAi:unArr
+            }
+
     }
 }
 
