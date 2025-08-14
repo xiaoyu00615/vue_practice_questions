@@ -24,7 +24,8 @@
   const WordText = ref(null)
   const timer = ref(null)
   const lookFile = ref(null)
-  const hasChoosetopic = ref(false)
+  const hasChooseTopic = ref(false)
+
 
   const jsonMessage = ref(null)
   const LookFileCom = ref(null)
@@ -132,7 +133,7 @@
   function closeMessage(value){
     console.log(value)
     LookFileCom.value = value
-    hasChoosetopic.value = value
+    hasChooseTopic.value = value
   }
 
   function getAnswerQuestionsCardEmit(value){
@@ -191,7 +192,7 @@
       <div class="column">
         <ButtonCode class="chat" @click="switchPage(router,'chat')">AI 聊天</ButtonCode>
 
-        <ButtonOption @click="hasChoosetopic = true"></ButtonOption>
+        <ButtonOption @click="hasChooseTopic = true"></ButtonOption>
 
         <div class="login-btn">
           <button class="login" @click="switchPage(router,'login')">
@@ -201,10 +202,13 @@
 
       </div>
       <div class="content">
+        <!-- 普通答题 -->
         <AnswerQuestionsCard
             :currentJson="currentJson"
             path="answer-question"
             @gave-message="getAnswerQuestionsCardEmit"></AnswerQuestionsCard>
+
+        <!-- 开始背题 -->
         <AnswerQuestionsCard
             :currentJson="currentJson"
             front-color="#d6a960"
@@ -214,6 +218,29 @@
           <template #front-title>开始背题</template>
           <template #front-content>依据自己设计的题进行答题，统计学习时间，进行背题。</template>
         </AnswerQuestionsCard>
+
+        <!-- 答题笔记 -->
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            front-color="#F9F7F1"
+            back-color="#E8E8E8"
+            path="notebook"
+            @gave-message="getAnswerQuestionsCardEmit">
+          <template #front-title>答题笔记</template>
+          <template #front-content>依据自己答题目的题进行复习查看自己写的笔记，统计时间。</template>
+        </AnswerQuestionsCard>
+
+        <!-- 错题本答题 -->
+        <AnswerQuestionsCard
+            :currentJson="currentJson"
+            front-color="#de315d"
+            back-color="#de31b4"
+            @gave-message="getAnswerQuestionsCardEmit">
+          <template #front-title>错题本答题</template>
+          <template #front-content>依据自己平时答题目错误的题进行答题，统计时间，判断答题情况等，</template>
+        </AnswerQuestionsCard>
+
+        <!-- 自定义答题 -->
         <AnswerQuestionsCard
             :currentJson="currentJson"
             front-color="#775ad6"
@@ -223,14 +250,6 @@
           <template #front-content>依据自己设计的题进行答题，统计时间，判断答题情况等，</template>
           <template #back-title>注意事项</template>
           <template #back-content>进入后会开始计时，直接退出会失去答题进度（建议提交后退出！）</template>
-        </AnswerQuestionsCard>
-        <AnswerQuestionsCard
-            :currentJson="currentJson"
-            front-color="#de315d"
-            back-color="#de31b4"
-            @gave-message="getAnswerQuestionsCardEmit">
-          <template #front-title>错题本答题</template>
-          <template #front-content>依据自己平时答题目错误的题进行答题，统计时间，判断答题情况等，</template>
         </AnswerQuestionsCard>
       </div>
 
@@ -248,7 +267,7 @@
     <template #title>查看模型渲染数据</template>
   </LookFileAnimate>
 
-  <ComOptionModal v-if="hasChoosetopic" @close-message="closeMessage" @choose-message="saveLookFileAnimateData"></ComOptionModal>
+  <ComOptionModal v-if="hasChooseTopic" @close-message="closeMessage" @choose-message="saveLookFileAnimateData"></ComOptionModal>
 
 </template>
 
@@ -331,7 +350,7 @@
   .container-con .right .content{
     display: grid;
     grid-template-columns: repeat(4,1fr);
-    gap: 50px;
+    gap: 30px;
     justify-items: center;
   }
 

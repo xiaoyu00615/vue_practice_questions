@@ -104,3 +104,16 @@
 .scale-primary-1:hover{
     transform: scale(1.1);
 }
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    margin-top: 25px;
+}
+
+.pos{
+    position: absolute;
+    right: 40px;
+    top: 20px;
+}

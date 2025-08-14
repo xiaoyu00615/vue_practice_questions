@@ -31,7 +31,11 @@ const routes = [
         path: '/back-question',
         name:'BackQuestion',
         component:()=> import('@/views/BackQuestion.vue')
-
+    },
+    {
+        path: '/notebook',
+        name:'NoteBook',
+        component:()=> import('@/views/NoteBook.vue')
     }
 ]
 

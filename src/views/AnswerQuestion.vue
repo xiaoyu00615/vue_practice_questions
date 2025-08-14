@@ -21,6 +21,8 @@
   import {switchPage} from "@/utils/public.js";
   import {useRouter} from "vue-router";
   import ModalNoteBook from "@/components/ModalNoteBook.vue";
+  import ModalAiExplain from "@/components/ModalAiExplain.vue";
+  import ModalNoteExplain from "@/components/ModalNoteExplain.vue";
 
   const router = useRouter()
   const imgUpTopic = ref(upTopic)
@@ -38,10 +40,13 @@
 
   const hasShowAnswerCard = ref(false)
   const hasShowNoteBook = ref(false)
+  const hasAIExplain = ref(false)
+  const hasNoteExplain = ref(false)
+
 
   const currentJson = readingArrData(localStorageCurrentOptions)
-  const fileName = currentJson.fileName
-  const jsonData = currentJson[fileName]
+  const currentFileName = currentJson.fileName
+  const jsonData = currentJson[currentFileName]
   const topicLength = jsonData.length
   let answerJson = []
 
@@ -160,12 +165,19 @@
   function closeMessage(value){
     hasShowAnswerCard.value = value
     hasShowNoteBook.value = value
+    hasAIExplain.value = value
+    hasNoteExplain.value = value
   }
 
   function chooseMessage(value){
     hasShowAnswerCard.value = false
     currentIndex.value = value
 
+  }
+
+  function promptMessageEmit(value){
+    promptMessage.type = value.type
+    promptMessage.message = value.message
   }
 
 </script>
@@ -175,7 +187,7 @@
     <div class="container-content" :style="{transform:`translate(-${currentIndex}00%,0)`}">
       <div class="item-block" v-for="(item,index) in jsonData" :style="{transform:`translate(${index}00%,0)`}">
         <div class="title">
-          <div class="note scale-primary-1"></div>
+          <div class="note scale-primary-1" @click="hasNoteExplain = true"></div>
           {{ item.title }}
         </div>
         <div class="options">
@@ -214,7 +226,7 @@
       </div>
 
       <!-- AI 解题 -->
-      <ButtonAiAnswer class="scale-primary-1"></ButtonAiAnswer>
+      <ButtonAiAnswer @click="hasAIExplain = true" class="scale-primary-1"></ButtonAiAnswer>
 
       <!-- 切换题目按钮 -->
       <div class="btn-toggle flex">
@@ -230,6 +242,7 @@
     </div>
 
 
+    <!-- 设置时间 -->
     <TimerSet class="pos-timer"></TimerSet>
 
     <div class="prompt" v-if="promptMessage.type">
@@ -238,13 +251,39 @@
       </PromptFrame>
     </div>
 
+    <!-- 模态答案卡片 -->
     <ModalAnswerCard
         v-if="hasShowAnswerCard"
         :topicNum="answerCard"
         @close-message="closeMessage"
         @choose-message="chooseMessage"></ModalAnswerCard>
 
-    <ModalNoteBook :topicIndex = currentIndex v-if="hasShowNoteBook" @close-message="closeMessage"></ModalNoteBook>
+    <!-- 模态笔记本 -->
+    <ModalNoteBook
+        :topicIndex = currentIndex
+        :currentFileName = currentFileName
+        v-if="hasShowNoteBook"
+        @prompt-message="promptMessageEmit"
+        @close-message="closeMessage"></ModalNoteBook>
+
+    <!-- 模态 Ai 解释 -->
+    <ModalAiExplain
+        @close-message="closeMessage"
+        @prompt-message="promptMessageEmit"
+        :currentIndex="currentIndex"
+        :jsonData="jsonData"
+        :currentFileName = currentFileName
+        v-if="hasAIExplain"></ModalAiExplain>
+
+    <!-- 模态笔记显示 -->
+    <ModalNoteExplain
+        @close-message="closeMessage"
+        :currentIndex="currentIndex"
+        v-if="hasNoteExplain">
+      <template #title>题目{{ currentIndex }}、查看笔记</template>
+    </ModalNoteExplain>
+
+
   </div>
 </template>
 
