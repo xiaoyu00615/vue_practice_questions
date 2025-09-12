@@ -57,12 +57,19 @@
     let currentJson = readingArrData(localStorageCurrentOptions)
     let currentAllJson = readingArrData(localStorageTopicAll)
 
-    currentJson.explain.explainWrite[index] = {
-      title:writeTitle.value,
-      options:writeOptions.value,
-      summarize:writeSummarize.value,
-      author:writeAuthor.value
+
+    if (writeTitle.value === '' && writeOptions.value === '' && writeSummarize.value === '' && writeAuthor.value === ''){
+      currentJson.explain.explainWrite[index] = null
+    }else{
+      currentJson.explain.explainWrite[index] = {
+        title:writeTitle.value,
+        options:writeOptions.value,
+        summarize:writeSummarize.value,
+        author:writeAuthor.value
+      }
     }
+
+
 
 
     saveArrData(localStorageCurrentOptions,currentJson)

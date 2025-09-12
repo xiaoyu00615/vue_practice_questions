@@ -54,7 +54,7 @@
   const chatHistoryRef = ref(null);
   // 对话历史
   const messages = ref([
-    { role: 'assistant', content: '你好！我是基于讯飞星火大模型的助手，有什么可以帮你？' }
+    { role: 'assistant', content: '你好！我是基于讯飞星火大模型的助手，有什么可以帮你？此模型版本较低，回答仅供参考！' }
   ]);
   // 用户输入
   const askQuestionStr = ref(answerStr);

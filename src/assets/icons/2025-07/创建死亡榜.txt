@@ -1,0 +1,33 @@
+创建
+/scoreboard objectives add Die deathCount 死亡榜
+
+/scoreboard objectives add Die deathCount {"text":"死亡榜","color":"red"}
+
+生成
+/scoreboard objectives setdisplay list Die
+/scoreboard objectives setdisplay sidebar Die
+
+
+gamerule keepInventory true
+
+
+
+// 创建添加一个队伍
+/team add yujiu  
+
+// 加入队伍 要添加自己也要进队
+/team join 队伍名 玩家名
+/team join yujiu YuJiuyu 
+/team join yujiu xiaojiu
+
+	 	
+// 查看全部队伍
+/team list 
+
+// 查看某一个队伍
+/team list 队伍名
+/team list yujiu
+
+// 关闭队伍友伤
+/team modify yujiu friendlyFire false
+
