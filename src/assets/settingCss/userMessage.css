@@ -1,0 +1,108 @@
+.container-com .setting-content .user-content .del-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.container-com .setting-content .user-content .del-box .tool{
+    display: flex;
+}
+.container-com .setting-content .user-content .del-box .tool > div{
+    margin-left: 5px;
+}
+.container-com .setting-content .user-content .del-box .tool .size{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.container-com .setting-content .user-content .del-box .tool .size:hover{
+    background: #f2f2f2;
+}
+.container-com .setting-content .user-content .del-box .tool .size img{
+    width: 65%;
+    height: 65%;
+}
+
+.container-com .setting-content .user-content .del-box .tool .exit{
+    width: 80px;
+    height: 30px;
+    border: 1px solid #ccc;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    cursor:pointer;
+}
+.container-com .setting-content .user-content .del-box .tool .exit:hover{
+    background: #f2f2f2;
+}
+
+.container-com .setting-content .user-content{
+    /** 宽度 */
+    width: 700px;
+    height: 150px;
+    border:2px solid #cccccc;
+    border-bottom: 3px solid #ccc;
+    border-radius: 15px;
+    margin:  15px 0 5px;
+    box-shadow: 0 1px 2px 0 #ccc;
+    padding: 15px 15px 5px 10px;
+}
+
+.container-com .setting-content .user-content .user-card{
+    display: flex;
+    align-items: center;
+}
+
+.container-com .setting-content .user-content .user-card .user-img{
+    width: 80px;
+    height: 70px;
+
+}
+.container-com .setting-content .user-content .user-card .user-img img{
+    width: 70px;
+    height: 70px;
+}
+.container-com .setting-content .user-content .user-card .user-info{
+    font-size: 12px;
+}
+.container-com .setting-content .user-content .user-card .user-info .email{
+    font-size: 10px;
+    margin:5px 0 2px 0
+}
+.container-com .setting-content .user-content .management-user{
+    font-size: 12px;
+    height: 38px;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.container-com .setting-content .user-content .management-user img{
+    width: 20px;
+    height: 20px;
+    margin: 0 5px 0 10px;
+}
+.container-com .setting-content .user-content .management-user:hover{
+    background: #f2f2f2;
+}
+
+
+.active{
+    position: relative;
+    background: #d1d1d1 !important;
+}
+.active::before{
+    height: 65%;
+    position: absolute;
+    left: 8px;
+    background: #2169EB;
+    content: '';
+    display: block;
+    width: 3px;
+    border-radius: 20px;
+}

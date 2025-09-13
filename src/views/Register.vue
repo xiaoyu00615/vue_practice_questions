@@ -1,6 +1,7 @@
 <script setup>
   import {switchPage} from "@/utils/public.js";
   import {useRouter} from "vue-router";
+  import {localStorageAllUser} from "@/utils/config.js";
 
   import {reactive, ref, watch} from 'vue'
   import PromptFrame from "@/components/PromptFrame.vue";
@@ -92,7 +93,7 @@
 
     // console.log("输入合法")
     allUser.push(intValue)
-    saveArrData('allUser',allUser)
+    saveArrData(localStorageAllUser,allUser)
     promptMessage.type = 'success'
     promptMessage.message = '账号注册成功！'
 

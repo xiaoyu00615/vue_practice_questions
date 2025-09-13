@@ -21,7 +21,10 @@ import backHomeHover from '@/assets/icons/back-home-hover.png'
 import notebook from '@/assets/icons/notebook.png'
 import notebookHover from '@/assets/icons/notebook-hover.png'
 
+import setting from '@/assets/icons/setting.png'
+import settingHover from '@/assets/icons/setting-hover.png'
 
+import user from '@/assets/user-icon/user.png'
 export{
     imgBack,
     imgBackHover,
@@ -42,5 +45,10 @@ export{
     backHomeHover,
 
     notebook,
-    notebookHover
+    notebookHover,
+
+    setting,
+    settingHover,
+
+    user
 }

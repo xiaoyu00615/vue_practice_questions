@@ -36,6 +36,10 @@ const routes = [
         path: '/notebook',
         name:'NoteBook',
         component:()=> import('@/views/NoteBook.vue')
+    },{
+        path: '/setting',
+        name:"Setting",
+        component:()=> import('@/views/Setting.vue')
     }
 ]
 

@@ -13,6 +13,7 @@
   import ComOptionModal from "@/components/ComOptionModal.vue";
   import ButtonOption from "@/components/ButtonOption.vue";
   import {localStorageCurrentOptions} from "@/utils/config.js";
+  import ButtonSetting from "@/components/ButtonSetting.vue";
 
   const router = useRouter()
   const fileData = reactive({
@@ -193,6 +194,8 @@
         <ButtonCode class="chat" @click="switchPage(router,'chat')">AI 聊天</ButtonCode>
 
         <ButtonOption @click="hasChooseTopic = true"></ButtonOption>
+
+        <ButtonSetting @click="switchPage(router,'setting')"></ButtonSetting>
 
         <div class="login-btn">
           <button class="login" @click="switchPage(router,'login')">

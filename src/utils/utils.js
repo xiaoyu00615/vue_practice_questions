@@ -201,4 +201,17 @@ export function compareAnswerFun(topicAnswer,standardAnswer){
 
 }
 
+/**
+ * 删除元素类名
+ * @param demoName 元素名
+ * @param nameArr 类名
+ */
+export function delDemoClass(demoName,nameArr = 'active'){
+    const demos = document.querySelector(demoName).childNodes
 
+    demos.forEach((demo)=>{
+        demo.classList.remove(nameArr)
+    })
+
+
+}

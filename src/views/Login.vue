@@ -321,6 +321,7 @@
   import {reactive, ref, watch} from "vue";
   import PromptFrame from "@/components/PromptFrame.vue";
   import {readingArrData, saveArrData} from "@/utils/utils.js";
+  import {localStorageLoginUser} from '@/utils/config.ts'
 
   const router = useRouter()
 
@@ -358,10 +359,12 @@
     const userObj = ref(null)
 
 
-    if(allUser.value > 1) {
+    if(allUser.value.length > 1) {
       userObj.value = allUser.value.find((user) => {
         return user.userName === intValue.userName && user.password === intValue.password
       })
+
+      console.log(userObj.value,"查找")
     }else{
       (allUser.value[0].userName , intValue.userName , allUser.value[0].password , intValue.password) ? userObj.value = allUser.value[0] :userObj.value = "null"
     }
@@ -374,7 +377,7 @@
       return;
     }
 
-    saveArrData('loginUser',userObj.value)
+    saveArrData(localStorageLoginUser,userObj.value)
 
     setTimeout(()=>{
         switchPage(router, '')
@@ -383,7 +386,7 @@
   }
 
   function visitorLogin(){
-    saveArrData('loginUser', null)
+    saveArrData(localStorageLoginUser, null)
 
     promptMessage.type = 'success'
     promptMessage.message = '访客登录成功等待跳转！'
