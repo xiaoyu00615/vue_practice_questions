@@ -10,6 +10,8 @@
   import {delDemoClass, readingArrData, saveArrData} from "@/utils/utils.js";
   import {localStorageLoginUser,localStorageAiConfig} from "@/utils/config.js";
   import PromptFrame from "@/components/PromptFrame.vue";
+  import {switchPage} from "@/utils/public.js";
+  import router from "@/router/index.js";
 
 
   const choose = ref(0)
@@ -97,7 +99,10 @@
 <template>
   <div class="container-com">
     <div class="sidebar">
-      <h2>设置</h2>
+      <div class="back">
+        <h2>设置</h2>
+        <div class="back-btn" @click="switchPage(router,'')">返回首页</div>
+      </div>
       <input placeholder="搜索设置">
       <div class="list-configuration">
         <div class="configuration user-data active" data-item="0" @click="userClick"><img :src="choose === 0 ? userDataHover : userData" alt=""><span>用户资料</span></div>
@@ -156,11 +161,11 @@
           </div>
           <div class="itemContent Api-url">
             <label for="Api-url">5.API_URL:</label>
-            <input v-model="aiConfigObj.AplUrl" type="text" placeholder="https://spark-api.xf-yun.com/v1.1/chat" id="Api-url">
+            <input v-model="aiConfigObj.AplUrl" type="text" placeholder="/v1.1/chat" id="Api-url">
           </div>
           <div class="itemContent url-host">
             <label for="url-host">6.API_URLHOST:</label>
-            <input v-model="aiConfigObj.AplUrlHost" type="text" placeholder="/spark-api.xf-yun.com" id="url-host">
+            <input v-model="aiConfigObj.AplUrlHost" type="text" placeholder="spark-api.xf-yun.com" id="url-host">
           </div>
 
           <div class="Instructions">
@@ -250,7 +255,21 @@
     overflow-y: auto;
   }
 
-
+  .back{
+    display: flex;
+    justify-content: space-between;
+  }
+  .back-btn{
+    border:1px solid #ccc;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .back-btn:hover{
+    background: #f2f2f2;
+  }
 
 
 

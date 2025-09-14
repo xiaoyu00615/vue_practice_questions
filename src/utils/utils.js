@@ -212,6 +212,12 @@ export function delDemoClass(demoName,nameArr = 'active'){
     demos.forEach((demo)=>{
         demo.classList.remove(nameArr)
     })
+}
 
+export function delDemoClassDemo(demo,nameArr = 'active'){
+    const demos = demo.childNodes
 
+    demos.forEach((demo)=>{
+        demo.classList.remove(nameArr)
+    })
 }

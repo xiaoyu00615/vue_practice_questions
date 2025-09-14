@@ -1,12 +1,37 @@
 import CryptoJS from 'crypto-js';
 import { Base64 } from "js-base64";
+import {readingArrData} from "@/utils/utils.js";
+import {localStorageAiConfig} from "@/utils/config.js";
 
-// 从环境变量获取配置（确保.env文件已正确设置）
-const APP_ID = import.meta.env.VITE_SPARK_APPID;
-const API_KEY = import.meta.env.VITE_SPARK_APIKEY;
-const API_SECRET = import.meta.env.VITE_SPARK_APISECRET;
-const API_HOST = import.meta.env.VITE_SPARK_API_URLHOST || 'spark-api.xf-yun.com';
-const API_PATH_WS = '/v1.1/chat';
+let APP_ID,API_KEY,API_SECRET,API_HOST,API_PATH_WS
+
+// console.log(import.meta.env.VITE_SPARK_APPID)
+if(import.meta.env.VITE_SPARK_APPID){
+    // 从环境变量获取配置（确保.env文件已正确设置）
+    APP_ID = import.meta.env.VITE_SPARK_APPID;
+    API_KEY = import.meta.env.VITE_SPARK_APIKEY;
+    API_SECRET = import.meta.env.VITE_SPARK_APISECRET;
+    API_HOST = import.meta.env.VITE_SPARK_API_URLHOST;
+    API_PATH_WS = import.meta.env.VITE_SPARK_API_URL;
+
+}else{
+    try{
+        const aiConfig = readingArrData(localStorageAiConfig)
+        console.log(aiConfig)
+        APP_ID = aiConfig.AppId
+        API_KEY = aiConfig.ApiKey
+        API_SECRET = aiConfig.AplSecret
+        API_HOST = aiConfig.AplUrlHost
+        API_PATH_WS = aiConfig.AplUrl
+    }catch (e) {
+        console.log('本地配置出错')
+    }
+}
+
+console.log(APP_ID,API_KEY,API_SECRET,API_HOST,API_PATH_WS)
+
+
+
 
 /**
  * 生成WebSocket连接URL
