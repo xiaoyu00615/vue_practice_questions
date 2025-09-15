@@ -132,6 +132,7 @@ import {delDemoClass, delDemoClassDemo, readingArrData} from "@/utils/utils.js";
 
   .page .topic-content{
     height: 40%;
+    padding: 20px;
   }
 
   .page .note-content{
@@ -228,6 +229,14 @@ import {delDemoClass, delDemoClassDemo, readingArrData} from "@/utils/utils.js";
   .back:hover{
     background: #e3e3e3;
     border:2px solid #b0b0b0;
+  }
+
+  .options{
+    text-indent: 1em;
+    line-height: 35px;
+  }
+  .title{
+    line-height: 40px;
   }
 
 </style>
